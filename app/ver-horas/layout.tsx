@@ -1,5 +1,6 @@
-import NavbarVerHoras from '@/components/navbar_ver_horas';
-import React from 'react'
+import NavbarVerHoras from "@/components/navbar_ver_horas";
+import React, { useEffect } from "react";
+import { useDateStore } from "../store/useDateStore";
 
 export default function SolicitarHoraLayout({
   children,
@@ -7,14 +8,14 @@ export default function SolicitarHoraLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className='container mx-auto py-10 px-4 bg-[#0f0f10] text-white'>
-        <h1 className="text-3xl font-bold text-center mb-8">Sistema de Reserva de Citas Médicas</h1>
-        <div className="max-w-3xl mx-auto">
-          <div className='p-6 w-full'>
-            <NavbarVerHoras/>
-            {children}
-          </div>
-        </div>
+    <main className="bg-[#0f0f10] text-white w-screen h-screen flex flex-col items-center justify-center">
+      <h1 className="text-4xl font-bold mb-10 text-center">
+        Agenda tu Visita
+      </h1>
+      <div className="max-w-3xl w-full">
+        <NavbarVerHoras />
+        {children}
+      </div>
     </main>
-  )
+  );
 }

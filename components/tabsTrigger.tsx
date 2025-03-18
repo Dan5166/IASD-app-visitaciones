@@ -11,8 +11,8 @@ export default function TabsTrigger({ text, link, activeTab }: TabsTriggerProps)
 
   return (
     <div
-      className={`cursor-default p-2 rounded-lg ${
-        isActive ? "text-white font-bold" : "text-gray-500"
+      className={`cursor-default p-2 rounded-md ${
+        isActive ? "text-white font-bold bg-[#09090b]" : "text-gray-500"
       }`}
     >
       {text}
