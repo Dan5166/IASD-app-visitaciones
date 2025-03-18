@@ -23,7 +23,7 @@ export default function Confirmation() {
   
     return (
       <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
-        <h2 className="text-3xl font-bold mb-2">Confirmación de Cita</h2>
+        <h2 className="text-3xl font-bold mb-2">Confirmación de Visita</h2>
         
         {/* Detalles de la cita */}
         <div className="mb-6">
@@ -34,7 +34,7 @@ export default function Confirmation() {
   
         {/* Información del paciente */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold">Información del Paciente</h3>
+          <h3 className="text-xl font-semibold">Información del Visitante</h3>
           <p><strong>Nombre:</strong> {patientInfo?.fullName}</p>
           <p><strong>Correo:</strong> {patientInfo?.email}</p>
           <p><strong>Teléfono:</strong> {patientInfo?.phone}</p>
@@ -42,7 +42,7 @@ export default function Confirmation() {
   
         {/* Motivo de la consulta */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold">Motivo de la Consulta</h3>
+          <h3 className="text-xl font-semibold">Tipo de Visita</h3>
           <p>{patientInfo?.reason}</p>
         </div>
   

@@ -52,7 +52,7 @@ export default function HourSelector() {
     for (let hour = start; hour < end; hour++) {
       const hourString = `${hour < 10 ? '0' + hour : hour}:00`;
       
-      // Verifica si la hora está reservada
+      // Verifica si la hora está reservada - TODO: Arreglar .. String no se puede usar como ID, alternativa, usar int y despues formatearlo como hora
       if (hours[hourString] !== "reservada" && hours[hourString] !== "no-disponible") {
         timeSlots.push(
           <button

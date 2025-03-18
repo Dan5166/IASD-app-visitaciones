@@ -20,7 +20,7 @@ export default function InformationSelector() {
 
   return (
     <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md text-white">
-      <h2 className="text-3xl font-bold mb-4 text-center">Información del Paciente</h2>
+      <h2 className="text-3xl font-bold mb-4 text-center">Información del Visitado</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -63,7 +63,7 @@ export default function InformationSelector() {
         </div>
 
         <div>
-          <label htmlFor="reason" className="block text-white">Motivo de la Consulta</label>
+          <label htmlFor="reason" className="block text-white">Tipo de Visita</label>
           <textarea
             id="reason"
             value={reason}
