@@ -9,7 +9,7 @@ interface DateStore {
     fullName: string;
     email: string;
     phone: string;
-    reason: string;
+    reason: string; // TODO: Sacar la razon de la informacion del paciente, esta puede quedar fuera para que la info del paciente tenga propiedades reutilizables
   };
   setSelectedDate: (date: Dayjs | null) => void;
   setSelectedTime: ( time: string | null) => void;
