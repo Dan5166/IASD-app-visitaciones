@@ -1,16 +1,61 @@
 "use client"
 
 import { useDateStore } from "@/app/store/useDateStore";
+import { setDocument } from "@/lib/firebase";
+import { Dayjs } from "dayjs";
 import React from "react";
+import { Timestamp } from "firebase/firestore"; // Importa Timestamp de Firebase
+
+interface Visitation {
+  timeStampSelected: Timestamp; // De aca se pueden obtener todos los datos, como fecha y hora
+  patientInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    reason: string;
+  };
+}
 
 export default function Confirmation() {
     const { selectedDate, selectedTime, patientInfo, setActiveTab, resetForm } = useDateStore();
   
     // Función para confirmar la reserva
-    const handleConfirm = () => {
-      // Aquí puedes hacer la lógica de guardar en Firestore o en la base de datos
+    const handleConfirm = async () => {
+      console.log(selectedDate);
+
+      let timestampConHoraCorrecta = null;
+      let fechaConHoraCorrecta = null;
+      if(selectedDate && selectedTime) {
+        // const fechaSinHoraCorrecta = Timestamp.fromDate(selectedDate.toDate());
+        // Transformo la hora que estaba en string a entero
+        const horaEntero = parseInt(selectedTime.split(":")[0], 10);
+        fechaConHoraCorrecta = selectedDate.hour(horaEntero).minute(0).second(0).millisecond(0);
+        timestampConHoraCorrecta = Timestamp.fromDate(fechaConHoraCorrecta.toDate())
+        console.log("TIMESTAMP CORRECTO:    ", fechaConHoraCorrecta)
+      }
+    
+      if(!fechaConHoraCorrecta){
+        // Limpiar el estado o redirigir al usuario según sea necesario
+        resetForm();
+        return false;
+      }
+
+     const visitation = {
+      timestampConHoraCorrecta,
+      patientInfo
+     }
+    
+      const id = `${fechaConHoraCorrecta.format('YYYY-MM-DDTHH:mm')}`;
+      const path = `reservas/${id}`;
+      
+      try {
+        await setDocument(path, visitation);
+      } catch (error) {
+        console.error(error);
+      }
+    
       alert("Reserva confirmada");
-  
+    
       // Limpiar el estado o redirigir al usuario según sea necesario
       resetForm();
     };
