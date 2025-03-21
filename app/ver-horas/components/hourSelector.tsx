@@ -1,40 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDateStore } from "@/app/store/useDateStore";
+import { getDocument } from "@/lib/firebase";
+
+type HourStatus = "no-disponible" | "reservada" | "libre";
+type HoursState = Record<string, HourStatus>;
 
 export default function HourSelector() {
   const { selectedDate, setSelectedTime, resetForm, selectedTime } = useDateStore(); // Obtener estado global
-  const [selectedHour, setSelectedHour] = useState<number | null>(null);
-  const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
-
-  // Objeto de horas con estado
-  const hours = {
-    "00:00": "no-disponible",
-    "01:00": "no-disponible",
-    "02:00": "no-disponible",
-    "03:00": "no-disponible",
-    "04:00": "no-disponible",
-    "05:00": "no-disponible",
-    "06:00": "no-disponible",
-    "07:00": "libre",
-    "08:00": "reservada",
-    "09:00": "libre",
-    "10:00": "reservada",
-    "11:00": "libre",
-    "12:00": "libre",
-    "13:00": "reservada",
-    "14:00": "libre",
-    "15:00": "libre",
-    "16:00": "libre",
-    "17:00": "libre",
-    "18:00": "libre",
-    "19:00": "libre",
-    "20:00": "libre",
-    "21:00": "libre",
-    "22:00": "no-disponible",
-    "23:00": "no-disponible",
-  };
+  const [hours, setHours] = useState<HoursState>({})
 
   const handleTimeSelect = (hour: string) => {
     // Solo pasa la hora como string, por ejemplo, "10:00", "14:30", etc.
@@ -48,12 +23,13 @@ export default function HourSelector() {
     // Convierte las horas de string a número
     const start = parseInt(startHour.split(":")[0], 10);
     const end = parseInt(endHour.split(":")[0], 10);
-    
+    console.log(hours)
     for (let hour = start; hour < end; hour++) {
       const hourString = `${hour < 10 ? '0' + hour : hour}:00`;
-      
+      console.log('Hora revisada: ', hourString);
+      console.log('Existe en dict?:   ', hours.hasOwnProperty(hourString))
       // Verifica si la hora está reservada - TODO: Arreglar .. String no se puede usar como ID, alternativa, usar int y despues formatearlo como hora
-      if (hours[hourString] !== "reservada" && hours[hourString] !== "no-disponible") {
+      if (hours.hasOwnProperty(hourString) && hours[hourString] !== "reservada" && hours[hourString] !== "no-disponible") {
         timeSlots.push(
           <button
             key={hourString}
@@ -71,6 +47,34 @@ export default function HourSelector() {
     }
     return timeSlots;
   };
+
+  const getHoursFromDB = async () => {
+    const path = `horas-disponibles/${selectedDate?.format("YYYY-MM-DD")}`
+      console.log(path)
+      try {
+        let res = await getDocument(path);
+        console.log(res);
+        setHours(res.horas);
+      } catch (error: any) {
+        console.error(error.message)
+      }
+  }
+
+  // Revisamos si existe una fecha seleccionada, que este en Firebase
+  useEffect(() => {
+    if(selectedDate){
+      console.log(selectedDate?.format("YYYY-MM-DD"));
+      // Buscamos esta fecha en el Firebase
+      getHoursFromDB();
+    }
+  }, [selectedDate?.format("YYYY-MM-DD")])
+
+  // Revisamos si existe una fecha seleccionada, que este en Firebase
+  useEffect(() => {
+    if(hours){
+      console.log(hours)
+    }
+  }, [hours]) 
   
   
   
@@ -90,7 +94,7 @@ export default function HourSelector() {
         <div>
           <h3 className="text-xl font-semibold text-white mb-2">Mañana</h3>
           <div className="grid grid-cols-3 gap-2">
-            {renderTimeGrid("00:00", "11:00")} {/* Horas de 00:00 a 11:00 */}
+            {hours && renderTimeGrid("00:00", "12:00")} {/* Horas de 00:00 a 11:00 */}
           </div>
         </div>
 
@@ -98,7 +102,7 @@ export default function HourSelector() {
         <div>
           <h3 className="text-xl font-semibold text-white mb-2">Tarde</h3>
           <div className="grid grid-cols-3 gap-2">
-            {renderTimeGrid("12:00", "23:00")} {/* Horas de 12:00 a 23:00 */}
+            {hours && renderTimeGrid("12:00", "23:00")} {/* Horas de 12:00 a 23:00 */}
           </div>
         </div>
       </div>

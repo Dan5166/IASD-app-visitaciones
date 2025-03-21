@@ -30,10 +30,10 @@ export default function WeekAdminPag() {
       const dayName = weekDays[currentDate.getDay()];
       const dayNumber = currentDate.getDate();
 
-      const hours: Record<string, "libre" | "tomada"> = {};
+      const hours: Record<string, "disponible" | "reservada"> = {};
       for (let hour = 8; hour <= 21; hour++) {
         const formattedHour = `${hour.toString().padStart(2, "0")}:00`;
-        hours[formattedHour] = "libre";
+        hours[formattedHour] = "disponible";
       }
 
       const data = {
@@ -112,7 +112,7 @@ export default function WeekAdminPag() {
                 <div
                   key={hour}
                   className={`p-2 text-center border rounded-lg ${
-                    status === "libre" ? "bg-white-300" : "bg-red-300"
+                    status === "disponible" ? "bg-white-300" : "bg-red-300"
                   }`}
                 >
                   {hour}

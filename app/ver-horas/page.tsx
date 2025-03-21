@@ -1,6 +1,5 @@
 "use client"
 
-import MyCalendar from '@/components/calendar'
 import React, { useState } from 'react'
 import DateSelector from './components/dateSelector'
 import { useDateStore } from '../store/useDateStore'
@@ -10,6 +9,7 @@ import Confirmation from './components/confirmation'
 
 export default function VerHorasDisponibles() {
   const { selectedDate, selectedTime, activeTab } = useDateStore();
+
   return (
     <div className='container'>
       {activeTab === "fecha" && !selectedDate ? (
