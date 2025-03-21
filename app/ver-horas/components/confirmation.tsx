@@ -46,7 +46,7 @@ export default function Confirmation() {
      }
     
       const id = `${fechaConHoraCorrecta.format('YYYY-MM-DDTHH:mm')}`;
-      const path = `reservas/${id}`;
+      const path = `reservas-activas/${id}`;
       
       try {
         await setDocument(path, visitation);
