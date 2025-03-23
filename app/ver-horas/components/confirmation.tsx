@@ -13,12 +13,12 @@ interface Visitation {
     fullName: string;
     email: string;
     phone: string;
-    reason: string;
   };
+  visitType: "En Domicilio" | "En Iglesia" | "Punto de encuentro" | "Online";
 }
 
 export default function Confirmation() {
-  const { selectedDate, selectedTime, patientInfo, setActiveTab, resetForm } =
+  const { selectedDate, selectedTime, patientInfo, setActiveTab, resetForm, visitType } =
     useDateStore();
 
   // Función para actualizar el estado de una hora específica
@@ -64,6 +64,7 @@ export default function Confirmation() {
       visitation = {
         requestedDate: requestedDate,
         patientInfo: patientInfo,
+        visitType: visitType
       };
 
       const id = `${fechaYHoraReserva.format("YYYY-MM-DDTHH:mm")}`;
@@ -124,7 +125,7 @@ export default function Confirmation() {
       {/* Motivo de la consulta */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold">Tipo de Visita</h3>
-        <p>{patientInfo?.reason}</p>
+        <p>{visitType}</p>
       </div>
 
       {/* Botones de acción */}
