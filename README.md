@@ -37,7 +37,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 # TODO
-Poner dias en calendario
+- Arreglar funcionamiento de Navbar en ver-horas
+- Poner dias en calendario
 - Espanol - Portugues - Ingles - Frances
-Anadir direccion de casa - Solo si la persona elige visita en casa
+- Anadir direccion de casa - Solo si la persona elige visita en casa
 - Pedir edad persona

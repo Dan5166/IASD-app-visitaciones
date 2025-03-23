@@ -80,7 +80,7 @@ export default function Dropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden px-2">
+        <div className="absolute right-2 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden px-2">
           <div className="px-4 py-2 font-semibold text-gray-700 border-b border-gray-300 text-center h-[150px]">
             {isLoading ? (
               <div className="flex justify-center items-center">
