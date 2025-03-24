@@ -1,6 +1,5 @@
 import NavbarVerHoras from "@/components/navbar_ver_horas";
-import React, { useEffect } from "react";
-import { useDateStore } from "../store/useDateStore";
+import React from "react";
 import Navbar from "@/components/navbar";
 
 export default function SolicitarHoraLayout({

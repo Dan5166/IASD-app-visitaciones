@@ -34,8 +34,8 @@ Pronto habra documentacion sobre cual es la idea general de cada pagina y compon
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 ## TODO
-- Arreglar funcionamiento de Navbar en ver-horas
-- Poner dias en calendario
-- Espanol - Portugues - Ingles - Frances
+- Hacer que funcionen las horas de manana y de tarde con un estado, para que no se renderice el titulo en caso de no haber
 - Anadir direccion de casa - Solo si la persona elige visita en casa
-- Pedir edad persona
+- Arreglar funcionamiento de Navbar en ver-horas
+- Espanol - Portugues - Ingles - Frances
+- Componentizar mejor codigo y revisar que deberia ser componente de servidor y componente de cliente
