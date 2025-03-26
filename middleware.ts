@@ -14,5 +14,5 @@ export function middleware(req: NextRequest) {
 
 // Aplicar middleware solo en rutas protegidas
 export const config = {
-  matcher: ["/visitador", "/admin"],
+  matcher: ["/visitador", "/admin", "/protected"],
 };
