@@ -1,46 +1,41 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase"; // Tu configuración de Firebase
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
-      // Iniciar sesión con Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user.getIdToken(); // Obtener token de Firebase
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Guardar el token en la cookie
-      document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 7}`; // 1 semana
+      if (!res.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
 
-      // Redirigir a la página de visitador
-      router.push("/visitador");
+      const data = await res.json();
+      Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "strict" });
+
+      router.push("/visitador"); // Redireccion condicional dependiendo del rol mayor del usuario
     } catch (error) {
       console.error("Error al iniciar sesión", error);
-      alert("Credenciales incorrectas");
+      alert(error.message);
     }
   };
 
   return (
     <div>
       <h1>Iniciar Sesión</h1>
-      <input
-        type="email"
-        placeholder="Correo"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <input type="email" placeholder="Correo" onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} />
       <button onClick={handleLogin}>Ingresar</button>
     </div>
   );
