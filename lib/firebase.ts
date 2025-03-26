@@ -32,7 +32,8 @@ export const storage = getStorage(app);
 // ##########################################################
 
 export const signIn = async(user: {email: string, password: string}) => {
-  return await signInWithEmailAndPassword(auth, user.email, user.password);
+  const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
+  return userCredential.user;
 }
 
 // Crear un nuevo usuario

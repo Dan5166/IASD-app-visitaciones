@@ -16,7 +16,7 @@ interface AvailableDate {
 export default function DateSelector() {
   const [weekData, setWeekData] = useState<AvailableDate[]>([]); // Semana obtenida de la BBDD
   const [availableDates, setAvailableDates] = useState<Dayjs[]>([]); // Revisa si un dia esta disponible para eleccion (dentro de la semana liberada)
-  const { selectedDate, setSelectedDate } = useDateStore(); // Storage para almacenar el dia seleccionado
+  const {selectedDate, setSelectedDate} = useDateStore(); // Storage para almacenar el dia seleccionado
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs()); // Mes actual para renderizar en el calendario
   const [isLoading, setIsLoading] = useState<boolean>(true); // Estado para mostrar el loader
 

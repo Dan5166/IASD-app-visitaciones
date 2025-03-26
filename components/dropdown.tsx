@@ -9,6 +9,7 @@ import { signOutAccount, updateDocument, uploadBase64 } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { setInLocalStorage } from "@/actions/set-in-localstorage";
+import Link from "next/link";
 
 export default function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +34,9 @@ export default function Dropdown() {
 
       setImage(imageUrl);
 
-      if(user){
+      if (user) {
         user.image = imageUrl;
-        setInLocalStorage('user', user)
+        setInLocalStorage("user", user);
       }
 
       toast.success("Subido Correctamente");
@@ -60,11 +61,10 @@ export default function Dropdown() {
   }, []);
 
   useEffect(() => {
-    if(user?.image){
-      setImage(user.image)
+    if (user?.image) {
+      setImage(user.image);
     }
-  }, [user])
-  
+  }, [user]);
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -73,10 +73,17 @@ export default function Dropdown() {
         className="px-4 py-2 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-100 transition flex items-center"
       >
         <span className="mr-2">Cuenta</span>
-        {image ? 
-                <Image className="object-cover w-6 h-6 rounded-full m-auto" src={image} width={1000} height={1000} alt="user-img"></Image>
-                : (<UserCircleIcon className="m-auto w-6 h-6" />)
-                }
+        {image ? (
+          <Image
+            className="object-cover w-6 h-6 rounded-full m-auto"
+            src={image}
+            width={1000}
+            height={1000}
+            alt="user-img"
+          ></Image>
+        ) : (
+          <UserCircleIcon className="m-auto w-6 h-6" />
+        )}
       </button>
 
       {isOpen && (
@@ -88,10 +95,17 @@ export default function Dropdown() {
               </div>
             ) : (
               <>
-                {image ? 
-                <Image className="object-cover w-20 h-20 rounded-full m-auto" src={image} width={1000} height={1000} alt="user-img"></Image>
-                : (<UserCircleIcon className="m-auto w-20 h-20" />)
-                }
+                {image ? (
+                  <Image
+                    className="object-cover w-20 h-20 rounded-full m-auto"
+                    src={image}
+                    width={1000}
+                    height={1000}
+                    alt="user-img"
+                  ></Image>
+                ) : (
+                  <UserCircleIcon className="m-auto w-20 h-20" />
+                )}
                 <input
                   id="files"
                   type="file"
