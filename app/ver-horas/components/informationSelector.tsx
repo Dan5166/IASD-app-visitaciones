@@ -4,18 +4,31 @@ import { useDateStore } from "@/app/store/useDateStore";
 import React, { useState } from "react";
 
 export default function InformationSelector() {
-  const { setPatientInfo, resetHour, setVisitType, visitType } = useDateStore();
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [reason, setReason] = useState("");
+  const { setPatientInfo, resetHour, setVisitType, visitType } = useDateStore(); // Obtenemos los valores necesarios del store
+  const [fullName, setFullName] = useState(""); // Nombre completo de la persona
+  const [email, setEmail] = useState(""); // Email de la persona
+  const [phone, setPhone] = useState(""); // Telefono de la persona
+  const [age, setAge] = useState(""); // Edad de la persona - TODO: Agregar guardado en BBDD de la edad de la persona
+  const [ageError, setAgeError] = useState<string | null>(null); // Estado para el error de edad
+
+  // Función para validar la edad
+  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const ageNumber = parseInt(value, 10);
+
+    if (isNaN(ageNumber) || ageNumber < 15 || ageNumber > 120) {
+      setAgeError("La edad debe estar entre 15 y 120 años.");
+    } else {
+      setAgeError(null);
+    }
+
+    setAge(value);
+  };
 
   // Función para manejar el envío del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setPatientInfo({ fullName, email, phone });
-    console.log("Cita confirmada");
-    console.log({ fullName, email, phone, reason, visitType });
+    setPatientInfo({ fullName, email, phone }); // En el store se guarda la info del paciente y se cambia el Tab a confirmation
   };
 
   return (
@@ -68,6 +81,24 @@ export default function InformationSelector() {
             placeholder="Escribe tu número de teléfono"
             required
           />
+        </div>
+
+        <div>
+          <label htmlFor="age" className="block text-white">
+            Edad
+          </label>
+          <input
+            id="age"
+            type="number"
+            value={age}
+            onChange={handleAgeChange}
+            className={`w-full p-3 rounded-md text-white bg-[#27272a] border ${
+              ageError ? "border-red-500" : "border-gray-600"
+            }`}
+            placeholder="Escribe tu edad"
+            required
+          />
+          {ageError && <p className="text-red-500 text-sm mt-1">{ageError}</p>}
         </div>
 
         <div>
