@@ -11,7 +11,8 @@ import {
 import { db, updateDocument } from "@/lib/firebase";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/authStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useVisitationStore } from "@/store/useVisitationsStore";
 
 // Define la estructura de los datos para la semana disponible
 interface Visitation {
@@ -31,46 +32,43 @@ interface VisitadorData {
   [key: string]: string; // Las claves son strings (ID del usuario) y los valores son strings (nombre del visitador)
 }
 
-
 export default function VisitationsTable() {
-  const [visitaciones, setVisitaciones] = useState<Visitation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [visitadores, setVisitadores] = useState<VisitadorData>({});
   const router = useRouter(); // Hook para manejar la navegación
 
   const { fetchUser, user } = useUserStore();
+  const { fetchVisitations, visitations, claimVisit } = useVisitationStore();
 
-  // Cargar visitaciones desde Firebase
+  const awaitVisitations = async () => {
+    setIsLoading(true);
+    try {
+      await fetchVisitations();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Carga las visitaciones desde la API llamanda en Zustand
   useEffect(() => {
-    const fetchVisitaciones = async () => {
-      setIsLoading(true);
-      try {
-        const querySnapshot = await getDocs(collection(db, "reservas-activas"));
-        const data: Visitation[] = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Visitation[];
-        setVisitaciones(data);
-      } catch (error) {
-        console.error("Error obteniendo visitaciones:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchVisitaciones();
-  }, []);
+    awaitVisitations();
+  }, [router]);
 
   // Busca el usuario en la API, esto para saber si el usuario esta guardado en las cookies desde el servidor
   useEffect(() => {
     fetchUser();
   }, [router]);
 
-  // Cargar datos de visitadores desde la colección 'users' - TODO: Esto podria volverse un hook para no repetir tanto el codigo
+  // Cargar datos de visitadores desde la colección 'users' - TODO: Esto podria moverse a Zustand para no repetir tanto el codigo
+  // DEBUG: Esto se hace asi para que me den los ids, y pueda hacer lo que quiera en el front, por ejemplo: TODO: Hacer que el nombre del visitador sea un link a su perfil
   useEffect(() => {
+    if(!visitations) return;
+    console.log("----------------- VISITACIONES:      ", visitations);
     const fetchVisitadores = async () => {
-        const visitadoresData: VisitadorData = {};
-      for (const visita of visitaciones) {
+      const visitadoresData: VisitadorData = {};
+      for (const visita of visitations) {
         if (visita.visitatorId && !visitadoresData[visita.visitatorId]) {
           const userDoc = await getDoc(doc(db, `users/${visita.visitatorId}`));
           if (userDoc.exists()) {
@@ -83,29 +81,20 @@ export default function VisitationsTable() {
       setVisitadores(visitadoresData);
     };
 
-    if (visitaciones.length > 0) {
+    if (visitations.length > 0) {
       fetchVisitadores();
     }
-  }, [visitaciones]);
+  }, [visitations]);
 
-  // Reclamar visita asignando el ID del usuario autenticado - TODO: Esto igual podria volverse un Hook, para poder reutilizarlo en la pagina de Admin al asignar manualmente visitadores
-  const handleClaimVisit = async (id:string) => {
-    if (!user)
-      return alert("Debes iniciar sesión para reclamar esta visita.");
-
+  const handleClaimVisit = async(visitId: string, visitatorId: string) => {
     try {
-      const userId = user.uid;
-      await updateDocument(`reservas-activas/${id}`, { visitatorId: userId });
-
-      setVisitaciones((prev) =>
-        prev.map((visita) =>
-          visita.id === id ? { ...visita, visitatorId: userId } : visita
-        )
-      );
+      setIsLoading(true);
+      await claimVisit(visitId, visitatorId);
     } catch (error) {
-      console.error("Error al reclamar la visita:", error);
+      console.error(error);
     }
-  };
+    await awaitVisitations();
+  }
 
   return (
     <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
@@ -127,8 +116,8 @@ export default function VisitationsTable() {
               </tr>
             </thead>
             <tbody>
-              {visitaciones.length > 0 ? (
-                visitaciones.map((visita) => (
+              {user && visitations && visitations.length > 0 ? (
+                visitations.map((visita) => (
                   <tr
                     key={visita.id}
                     className="text-center hover:bg-[#27272a] text-white"
@@ -153,8 +142,9 @@ export default function VisitationsTable() {
                       ) : (
                         <button
                           className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          onClick={() => handleClaimVisit(visita.id)}
+                          onClick={() => handleClaimVisit(visita.id, user.uid)}
                         >
+                          {/*handleClaimVisit(visita.id)*/}
                           Reclamar
                         </button>
                       )}

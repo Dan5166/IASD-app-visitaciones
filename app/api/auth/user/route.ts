@@ -18,10 +18,8 @@ export async function GET(req: Request) {
     if (decodedToken) {
       try {
         const path = `users/${decodedToken.uid}`;
-        console.log("############### TRATANDO DE OBTENER:   ",path);
         const userForClientUse = await getDocument(path);
         if(userForClientUse) {
-          console.log("############### SERVIDOR RETORNA USUARIO:   ",userForClientUse);
           return NextResponse.json({ success: true, user: userForClientUse });
         }
       } catch (error) {
