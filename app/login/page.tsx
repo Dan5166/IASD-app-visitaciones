@@ -16,20 +16,26 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (!res.ok) {
         throw new Error("Credenciales incorrectas");
       }
-
+  
       const data = await res.json();
       Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "strict" });
-
-      router.push("/visitador"); // Redireccion condicional dependiendo del rol mayor del usuario
+  
+      router.push("/visitador"); // Redirección condicional dependiendo del rol mayor del usuario
     } catch (error) {
-      console.error("Error al iniciar sesión", error);
-      alert(error.message);
+      if (error instanceof Error) {
+        console.error("Error al iniciar sesión", error);
+        alert(error.message);
+      } else {
+        console.error("Error desconocido", error);
+        alert("Ocurrió un error inesperado.");
+      }
     }
   };
+  
 
   return (
     <div>
