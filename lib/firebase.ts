@@ -50,7 +50,6 @@ export const updateUser = async(user: {displayName?: string, photoURL?: string |
 
 // Cerrar sesion
 export const signOutAccount = () => {
-  localStorage.removeItem('user');
   return auth.signOut();
 }
 

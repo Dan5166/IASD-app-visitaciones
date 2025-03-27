@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import admin from "@/lib/firebase-admin"; // Importa Firebase Admin
+import { getDocument } from "@/lib/firebase";
 
 export async function GET(req: Request) {
   // Obtener el token desde las cookies
@@ -14,7 +15,23 @@ export async function GET(req: Request) {
     const decodedToken = await admin.auth().verifyIdToken(token);
 
     // Retornar los datos del usuario
-    return NextResponse.json({ success: true, user: decodedToken });
+    if (decodedToken) {
+      try {
+        const path = `users/${decodedToken.uid}`;
+        console.log("############### TRATANDO DE OBTENER:   ",path);
+        const userForClientUse = await getDocument(path);
+        if(userForClientUse) {
+          console.log("############### SERVIDOR RETORNA USUARIO:   ",userForClientUse);
+          return NextResponse.json({ success: true, user: userForClientUse });
+        }
+      } catch (error) {
+        console.error("Error verificando el token:", error);
+        return NextResponse.redirect(new URL("/login", req.url));
+      }
+    } else {
+      console.log("NO DECODED TOKEN");
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   } catch (error) {
     console.error("Error verificando el token:", error);
     return NextResponse.redirect(new URL("/login", req.url));
