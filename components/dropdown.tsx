@@ -96,7 +96,7 @@ export default function Dropdown() {
         const data = await res.json();
 
         if (res.ok) {
-          console.log("------------- CLIENTE RECIBE EL USUARIO:   ", data.user);
+          console.log("------------- DROPDOWN RECIBE EL USUARIO:   ", data.user);
           setUser(data.user);
         } else {
           console.error("Error al obtener usuario:", data.message);

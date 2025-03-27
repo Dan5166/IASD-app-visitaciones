@@ -7,6 +7,8 @@ import { DocumentData } from "firebase/firestore"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
+// TODO: Usar un hook que guarde los datos del usuario en Zustand, y que asi sean accesibles desde cualquier lado
+
 export const useUsers = () => {
     const [user, setUser] = useState<User| undefined | DocumentData>(undefined)
     const pathName = usePathname();

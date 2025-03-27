@@ -8,9 +8,10 @@ import {
   getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { db, auth, updateDocument } from "@/lib/firebase";
+import { db, updateDocument } from "@/lib/firebase";
 import dayjs from "dayjs";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/authStore";
 
 // Define la estructura de los datos para la semana disponible
 interface Visitation {
@@ -26,16 +27,18 @@ interface Visitation {
   };
 }
 
-  interface VisitadorData {
-    [key: string]: string; // Las claves son strings (ID del usuario) y los valores son strings (nombre del visitador)
-  }
-  
+interface VisitadorData {
+  [key: string]: string; // Las claves son strings (ID del usuario) y los valores son strings (nombre del visitador)
+}
+
 
 export default function VisitationsTable() {
   const [visitaciones, setVisitaciones] = useState<Visitation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<User>();
   const [visitadores, setVisitadores] = useState<VisitadorData>({});
+  const router = useRouter(); // Hook para manejar la navegación
+
+  const { fetchUser, user } = useUserStore();
 
   // Cargar visitaciones desde Firebase
   useEffect(() => {
@@ -58,18 +61,12 @@ export default function VisitationsTable() {
     fetchVisitaciones();
   }, []);
 
-  // Obtener información del usuario autenticado
+  // Busca el usuario en la API, esto para saber si el usuario esta guardado en las cookies desde el servidor
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) setCurrentUser(user); // TODO: Cambiar por usuario en localStorage
-        else {
-            console.log("No hay usuario");
-        }
-    });
-    return () => unsubscribe();
-  }, []);
+    fetchUser();
+  }, [router]);
 
-  // Cargar datos de visitadores desde la colección 'users'
+  // Cargar datos de visitadores desde la colección 'users' - TODO: Esto podria volverse un hook para no repetir tanto el codigo
   useEffect(() => {
     const fetchVisitadores = async () => {
         const visitadoresData: VisitadorData = {};
@@ -91,18 +88,13 @@ export default function VisitationsTable() {
     }
   }, [visitaciones]);
 
-  useEffect(() => {
-    if (visitaciones.length == 0) return;
-    console.log(visitaciones);
-  }, [visitaciones]);
-
-  // Reclamar visita asignando el ID del usuario autenticado
+  // Reclamar visita asignando el ID del usuario autenticado - TODO: Esto igual podria volverse un Hook, para poder reutilizarlo en la pagina de Admin al asignar manualmente visitadores
   const handleClaimVisit = async (id:string) => {
-    if (!currentUser)
+    if (!user)
       return alert("Debes iniciar sesión para reclamar esta visita.");
 
     try {
-      const userId = currentUser.uid;
+      const userId = user.uid;
       await updateDocument(`reservas-activas/${id}`, { visitatorId: userId });
 
       setVisitaciones((prev) =>
