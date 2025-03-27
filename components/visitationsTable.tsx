@@ -34,11 +34,10 @@ interface VisitadorData {
 
 export default function VisitationsTable() {
   const [isLoading, setIsLoading] = useState(true);
-  const [visitadores, setVisitadores] = useState<VisitadorData>({});
   const router = useRouter(); // Hook para manejar la navegación
 
   const { fetchUser, user } = useUserStore();
-  const { fetchVisitations, visitations, claimVisit } = useVisitationStore();
+  const { fetchVisitations, visitations, claimVisit, visitators } = useVisitationStore();
 
   const awaitVisitations = async () => {
     setIsLoading(true);
@@ -61,31 +60,7 @@ export default function VisitationsTable() {
     fetchUser();
   }, [router]);
 
-  // Cargar datos de visitadores desde la colección 'users' - TODO: Esto podria moverse a Zustand para no repetir tanto el codigo
-  // DEBUG: Esto se hace asi para que me den los ids, y pueda hacer lo que quiera en el front, por ejemplo: TODO: Hacer que el nombre del visitador sea un link a su perfil
-  useEffect(() => {
-    if(!visitations) return;
-    console.log("----------------- VISITACIONES:      ", visitations);
-    const fetchVisitadores = async () => {
-      const visitadoresData: VisitadorData = {};
-      for (const visita of visitations) {
-        if (visita.visitatorId && !visitadoresData[visita.visitatorId]) {
-          const userDoc = await getDoc(doc(db, `users/${visita.visitatorId}`));
-          if (userDoc.exists()) {
-            visitadoresData[visita.visitatorId] = userDoc.data().name;
-          } else {
-            visitadoresData[visita.visitatorId] = "No Identificado";
-          }
-        }
-      }
-      setVisitadores(visitadoresData);
-    };
-
-    if (visitations.length > 0) {
-      fetchVisitadores();
-    }
-  }, [visitations]);
-
+  // TODO: Hacer que el nombre del visitador sea un link a su perfil
   const handleClaimVisit = async(visitId: string, visitatorId: string) => {
     try {
       setIsLoading(true);
@@ -94,7 +69,20 @@ export default function VisitationsTable() {
       console.error(error);
     }
     await awaitVisitations();
-  }
+  };
+
+  const handleEditVisit = (visitId: string) => {
+    // Lógica para editar visita (navegar a una página de edición o mostrar un formulario)
+    console.log(`Editando visita ${visitId}`);
+    // Puedes agregar una navegación a una página de edición, por ejemplo:
+    // router.push(`/edit-visit/${visitId}`);
+  };
+
+  const handleDeleteVisit = (visitId: string) => {
+    // Lógica para eliminar la visita
+    console.log(`Eliminando visita ${visitId}`);
+    // Aquí puedes hacer una llamada a la API para eliminar la visita
+  };
 
   return (
     <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
@@ -113,52 +101,65 @@ export default function VisitationsTable() {
                 <th className="p-3 border border-[#27272a]">Nombre</th>
                 <th className="p-3 border border-[#27272a]">Tipo de Visita</th>
                 <th className="p-3 border border-[#27272a]">Visitador</th>
+                <th className="p-3 border border-[#27272a]">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {user && visitations && visitations.length > 0 ? (
-                visitations.map((visita) => (
-                  <tr
-                    key={visita.id}
-                    className="text-center hover:bg-[#27272a] text-white"
-                  >
-                    <td className="p-3 border border-[#27272a]">
-                      {dayjs
-                        .unix(visita.requestedDate.seconds)
-                        .format("DD/MM/YYYY")}
-                    </td>
-                    <td className="p-3 border border-[#27272a]">
-                      {dayjs(visita.id).format("HH:mm")}
-                    </td>
-                    <td className="p-3 border border-[#27272a]">
-                      {visita.patientInfo.fullName}
-                    </td>
-                    <td className="p-3 border border-[#27272a]">
-                      {visita.visitType}
-                    </td>
-                    <td className="p-3 border border-[#27272a]">
-                      {visita.visitatorId ? (
-                        visitadores[visita.visitatorId] || "Cargando..."
-                      ) : (
-                        <button
-                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          onClick={() => handleClaimVisit(visita.id, user.uid)}
-                        >
-                          {/*handleClaimVisit(visita.id)*/}
-                          Reclamar
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="p-3 text-center text-gray-400">
-                    No hay visitaciones registradas
-                  </td>
-                </tr>
-              )}
-            </tbody>
+  {user && visitations && visitations.length > 0 ? (
+    visitations.map((visita) => (
+      <tr key={visita.id} className="text-center hover:bg-[#27272a] text-white">
+        <td className="p-3 border border-[#27272a]">
+          {dayjs
+            .unix(visita.requestedDate.seconds)
+            .format("DD/MM/YYYY")}
+        </td>
+        <td className="p-3 border border-[#27272a]">
+          {dayjs(visita.id).format("HH:mm")}
+        </td>
+        <td className="p-3 border border-[#27272a]">
+          {visita.patientInfo.fullName}
+        </td>
+        <td className="p-3 border border-[#27272a]">
+          {visita.visitType}
+        </td>
+        <td className="p-3 border border-[#27272a]">
+          {visita.visitatorId ? (
+            visitators[visita.visitatorId] || "Cargando..."
+          ) : (
+            <button
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => handleClaimVisit(visita.id, user.uid)}
+            >
+              Reclamar
+            </button>
+          )}
+        </td>
+        {/* Columna de Acciones */}
+        <td className="p-3 border border-[#27272a]">
+          <button
+            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+            onClick={() => handleEditVisit(visita.id)}
+          >
+            Editar
+          </button>
+          <button
+            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 ml-2"
+            onClick={() => handleDeleteVisit(visita.id)}
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6} className="p-3 text-center text-gray-400">
+        No hay visitaciones registradas
+      </td>
+    </tr>
+  )}
+</tbody>
+
           </table>
         </div>
       )}
