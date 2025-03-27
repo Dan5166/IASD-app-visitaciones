@@ -1,7 +1,6 @@
-import NavbarVerHoras from "@/components/navbar_ver_horas";
-import React, { useEffect } from "react";
-import { useDateStore } from "../store/useDateStore";
 import Navbar from "@/components/navbar";
+import TabsComponent from "@/components/tabsComponent";
+import React from "react";
 
 export default function SolicitarHoraLayout({
   children,
@@ -16,7 +15,7 @@ export default function SolicitarHoraLayout({
           Agenda tu Visita
         </h1>
         <div className="max-w-3xl w-full text-white">
-          <NavbarVerHoras />
+          <TabsComponent />
           {children}
         </div>
       </div>

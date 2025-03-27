@@ -32,7 +32,8 @@ export const storage = getStorage(app);
 // ##########################################################
 
 export const signIn = async(user: {email: string, password: string}) => {
-  return await signInWithEmailAndPassword(auth, user.email, user.password);
+  const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
+  return userCredential.user;
 }
 
 // Crear un nuevo usuario
@@ -49,7 +50,6 @@ export const updateUser = async(user: {displayName?: string, photoURL?: string |
 
 // Cerrar sesion
 export const signOutAccount = () => {
-  localStorage.removeItem('user');
   return auth.signOut();
 }
 

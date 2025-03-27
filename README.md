@@ -1,44 +1,41 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Sobre el proyecto
+Este proyecto es una pagina de agendar y control de visitaciones para la Iglesia Adventista de Las Condes.
 
-First, run the development server:
+La pagina cuenta con:
+- Calendario para pedir horas
+- Autenticacion
+- Pagina de administracion del sitio
+- Subida de archivos
+
+Pronto se agregaran:
+- Seleccion de idioma entre los principales del PO
+- Envio de correos de notificacion
+- Chat interno para coordinacion de los visitadores
+
+## Inicializar el proyecto
+
+Para correr el ***servidor local de desarrollo***:
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Pronto habra documentacion sobre cual es la idea general de cada pagina y componente.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
+## Recursos de Next.js
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-
-# TODO
-- Arreglar funcionamiento de Navbar en ver-horas
-- Poner dias en calendario
-- Espanol - Portugues - Ingles - Frances
+## TODO
+- Hacer que funcionen las horas de manana y de tarde con un estado, para que no se renderice el titulo en caso de no haber
 - Anadir direccion de casa - Solo si la persona elige visita en casa
-- Pedir edad persona
+- Arreglar funcionamiento de Navbar en ver-horas
+- Espanol - Portugues - Ingles - Frances
+- Componentizar mejor codigo y revisar que deberia ser componente de servidor y componente de cliente

@@ -12,7 +12,7 @@ export const useUsers = () => {
     const pathName = usePathname();
     const router = useRouter();
 
-    const protectedRoutes = ['/dashboard'];
+    const protectedRoutes = ['/visitador'];
     const isInProtectedRoute = protectedRoutes.includes(pathName);
 
     const getUserFromDB = async (uid: string) => {
@@ -38,7 +38,7 @@ export const useUsers = () => {
                 }
             } else { // No existe usuario autenticado
                 if(isInProtectedRoute) { // Esta en una ruta protegida
-                    router.push('/'); // Se manda a la autenticacion
+                    router.push('/auth'); // Se manda a la pagina de pedir horas
                 }
             }
         })

@@ -3,20 +3,29 @@
 import { useState, useRef, useEffect } from "react";
 import { UserIcon, Cog6ToothIcon, PowerIcon } from "@heroicons/react/24/solid";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { useUsers } from "../hooks/useUsers";
 import fileToBase64 from "@/actions/convert-file-to-base64";
-import { signOutAccount, updateDocument, uploadBase64 } from "@/lib/firebase";
+import {
+  getDocument,
+  signOutAccount,
+  updateDocument,
+  uploadBase64,
+} from "@/lib/firebase";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { setInLocalStorage } from "@/actions/set-in-localstorage";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  let user = useUsers();
   const [image, setImage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter(); // Hook para manejar la navegación
+  const [userCredentials, setUserCredentials] = useState<any>();
+  const [user, setUser] = useState<any>();
 
   const chooseImage = async (event: any) => {
     const file = event.target.files[0];
@@ -33,9 +42,8 @@ export default function Dropdown() {
 
       setImage(imageUrl);
 
-      if(user){
+      if (user) {
         user.image = imageUrl;
-        setInLocalStorage('user', user)
       }
 
       toast.success("Subido Correctamente");
@@ -44,6 +52,23 @@ export default function Dropdown() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    const response = await fetch("/api/auth/logout", {
+      method: "GET",
+      credentials: "include", // Importante para enviar cookies
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data.message);
+      router.push("/login"); // Redirige al login
+    } else {
+      console.error("Error al cerrar sesión:", data.message);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -59,12 +84,45 @@ export default function Dropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Obtenemos el usuario desde las cookies para comparar el token con Firebase
   useEffect(() => {
-    if(user?.image){
-      setImage(user.image)
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/auth/user", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          console.log("------------- CLIENTE RECIBE EL USUARIO:   ", data.user);
+          setUser(data.user);
+        } else {
+          console.error("Error al obtener usuario:", data.message);
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
     }
-  }, [user])
-  
+    console.log("SE BAILA CON EL USUARIO");
+
+    if (user?.image) {
+      setImage(user.image);
+    }
+  }, [user]);
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -73,10 +131,17 @@ export default function Dropdown() {
         className="px-4 py-2 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-100 transition flex items-center"
       >
         <span className="mr-2">Cuenta</span>
-        {image ? 
-                <Image className="object-cover w-6 h-6 rounded-full m-auto" src={image} width={1000} height={1000} alt="user-img"></Image>
-                : (<UserCircleIcon className="m-auto w-6 h-6" />)
-                }
+        {image ? (
+          <Image
+            className="object-cover w-6 h-6 rounded-full m-auto"
+            src={image}
+            width={1000}
+            height={1000}
+            alt="user-img"
+          ></Image>
+        ) : (
+          <UserCircleIcon className="m-auto w-6 h-6" />
+        )}
       </button>
 
       {isOpen && (
@@ -88,10 +153,17 @@ export default function Dropdown() {
               </div>
             ) : (
               <>
-                {image ? 
-                <Image className="object-cover w-20 h-20 rounded-full m-auto" src={image} width={1000} height={1000} alt="user-img"></Image>
-                : (<UserCircleIcon className="m-auto w-20 h-20" />)
-                }
+                {image ? (
+                  <Image
+                    className="object-cover w-20 h-20 rounded-full m-auto"
+                    src={image}
+                    width={1000}
+                    height={1000}
+                    alt="user-img"
+                  ></Image>
+                ) : (
+                  <UserCircleIcon className="m-auto w-20 h-20" />
+                )}
                 <input
                   id="files"
                   type="file"
@@ -125,7 +197,7 @@ export default function Dropdown() {
             </li>
             <li
               className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-              onClick={signOutAccount}
+              onClick={handleLogout}
             >
               <PowerIcon className="h-6 w-6 text-red-500" /> Cerrar Sesión
             </li>

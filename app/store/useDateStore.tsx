@@ -11,6 +11,7 @@ interface DateStore {
     phone: string;
   };
   visitType: "En Domicilio" | "En Iglesia" | "Punto de encuentro" | "Online";
+  visitator: string | null;
   setSelectedDate: (date: Dayjs | null) => void;
   setSelectedTime: (time: string | null) => void;
   setActiveTab: (tab: "fecha" | "hora" | "informacion" | "confirmacion") => void;
@@ -20,7 +21,7 @@ interface DateStore {
   resetHour: () => void;
 }
 
-export const useDateStore = create<DateStore>((set) => ({
+export const useDateStore = create<DateStore>((set) => ({ // Store en la APP para revisar desde cualquier lado esta constante
   selectedDate: null,
   selectedTime: null,
   activeTab: "fecha", // Tab predeterminado es "fecha",
@@ -29,7 +30,8 @@ export const useDateStore = create<DateStore>((set) => ({
     email: '',
     phone: ''
   },
-  visitType: "En Domicilio", // Valor predeterminado agregado
+  visitType: "En Domicilio", // Valor predeterminado es "En Domicilio",
+  visitator: null,
 
   setSelectedDate: (date) => {
     set({ selectedDate: date, activeTab: "hora" });
@@ -47,7 +49,7 @@ export const useDateStore = create<DateStore>((set) => ({
       email: '',
       phone: ''
     },
-    visitType: "En Domicilio", // También restablecer el visitType
+    visitType: "En Domicilio",
   }),
   
   resetHour: () => set({
