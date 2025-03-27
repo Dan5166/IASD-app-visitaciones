@@ -1,6 +1,6 @@
 "use client";
 
-import { useDateStore } from "@/app/store/useDateStore";
+import { useDateStore } from "@/store/useDateStore";
 import { setDocument, updateDocument } from "@/lib/firebase";
 import { Dayjs } from "dayjs";
 import React from "react";

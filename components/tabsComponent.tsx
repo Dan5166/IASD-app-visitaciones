@@ -2,7 +2,7 @@
 
 import React from "react";
 import TabsTrigger from "./tabsTrigger";
-import { useDateStore } from "@/app/store/useDateStore";
+import { useDateStore } from "@/store/useDateStore";
 
 export default function TabsComponent() {
   const {activeTab} = useDateStore();

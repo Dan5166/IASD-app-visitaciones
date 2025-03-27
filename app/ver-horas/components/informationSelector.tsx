@@ -1,6 +1,6 @@
 "use client";
 
-import { useDateStore } from "@/app/store/useDateStore";
+import { useDateStore } from "@/store/useDateStore";
 import React, { useState } from "react";
 
 export default function InformationSelector() {

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import DateSelector from './components/dateSelector'
-import { useDateStore } from '../store/useDateStore'
+import { useDateStore } from '../../store/useDateStore'
 import HourSelector from './components/hourSelector'
 import InformationSelector from './components/informationSelector'
 import Confirmation from './components/confirmation'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import dayjs, { Dayjs } from "dayjs";
-import { useDateStore } from "@/app/store/useDateStore";
+import { useDateStore } from "@/store/useDateStore";
 
 // Define la estructura de los datos para la semana disponible
 interface AvailableDate {

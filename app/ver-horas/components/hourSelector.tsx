@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDateStore } from "@/app/store/useDateStore";
+import { useDateStore } from "@/store/useDateStore";
 import { getDocument } from "@/lib/firebase";
 
 type HourStatus = "no-disponible" | "reservada" | "libre";
