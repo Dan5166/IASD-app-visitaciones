@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useVisitationStore } from "@/store/useVisitationsStore";
+import Link from "next/link";
 
 // Define la estructura de los datos para la semana disponible
 interface Visitation {
@@ -36,39 +37,31 @@ export default function VisitationsTable() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter(); // Hook para manejar la navegación
 
-  const { fetchUser, user } = useUserStore();
-  const { fetchVisitations, visitations, claimVisit, visitators } = useVisitationStore();
+  const { fetchUser, user, isLoadingUser } = useUserStore();
+  const {
+    fetchVisitations,
+    visitations,
+    claimVisit,
+    visitators,
+    isLoadingVisitations,
+    isLoadingVisitators,
+  } = useVisitationStore();
 
-  const awaitVisitations = async () => {
-    setIsLoading(true);
-    try {
-      await fetchVisitations();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Carga las visitaciones desde la API llamanda en Zustand
+  // Carga las visitaciones y los usuarios desde la API llamanda en Zustand
   useEffect(() => {
-    awaitVisitations();
-  }, [router]);
-
-  // Busca el usuario en la API, esto para saber si el usuario esta guardado en las cookies desde el servidor
-  useEffect(() => {
+    fetchVisitations();
     fetchUser();
-  }, [router]);
+  }, []);
 
   // TODO: Hacer que el nombre del visitador sea un link a su perfil
-  const handleClaimVisit = async(visitId: string, visitatorId: string) => {
+  const handleClaimVisit = async (visitId: string, visitatorId: string) => {
     try {
       setIsLoading(true);
       await claimVisit(visitId, visitatorId);
     } catch (error) {
       console.error(error);
     }
-    await awaitVisitations();
+    fetchVisitations();
   };
 
   const handleEditVisit = (visitId: string) => {
@@ -87,7 +80,7 @@ export default function VisitationsTable() {
   return (
     <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
       <h2 className="text-3xl font-bold mb-4">Lista de Visitaciones</h2>
-      {isLoading ? (
+      {isLoadingVisitations ? (
         <div className="flex justify-center items-center h-40">
           <div className="w-10 h-10 border-4 border-white border-solid border-t-transparent rounded-full animate-spin"></div>
         </div>
@@ -105,61 +98,68 @@ export default function VisitationsTable() {
               </tr>
             </thead>
             <tbody>
-  {user && visitations && visitations.length > 0 ? (
-    visitations.map((visita) => (
-      <tr key={visita.id} className="text-center hover:bg-[#27272a] text-white">
-        <td className="p-3 border border-[#27272a]">
-          {dayjs
-            .unix(visita.requestedDate.seconds)
-            .format("DD/MM/YYYY")}
-        </td>
-        <td className="p-3 border border-[#27272a]">
-          {dayjs(visita.id).format("HH:mm")}
-        </td>
-        <td className="p-3 border border-[#27272a]">
-          {visita.patientInfo.fullName}
-        </td>
-        <td className="p-3 border border-[#27272a]">
-          {visita.visitType}
-        </td>
-        <td className="p-3 border border-[#27272a]">
-          {visita.visitatorId ? (
-            visitators[visita.visitatorId] || "Cargando..."
-          ) : (
-            <button
-              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-              onClick={() => handleClaimVisit(visita.id, user.uid)}
-            >
-              Reclamar
-            </button>
-          )}
-        </td>
-        {/* Columna de Acciones */}
-        <td className="p-3 border border-[#27272a]">
-          <button
-            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-            onClick={() => handleEditVisit(visita.id)}
-          >
-            Editar
-          </button>
-          <button
-            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 ml-2"
-            onClick={() => handleDeleteVisit(visita.id)}
-          >
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={6} className="p-3 text-center text-gray-400">
-        No hay visitaciones registradas
-      </td>
-    </tr>
-  )}
-</tbody>
-
+              {user && visitations && visitations.length > 0 ? (
+                visitations.map((visita) => (
+                  <tr
+                    key={visita.id}
+                    className="text-center hover:bg-[#27272a] text-white"
+                  >
+                    <td className="p-3 border border-[#27272a]">
+                      {dayjs
+                        .unix(visita.requestedDate.seconds)
+                        .format("DD/MM/YYYY")}
+                    </td>
+                    <td className="p-3 border border-[#27272a]">
+                      {dayjs(visita.id).format("HH:mm")}
+                    </td>
+                    <td className="p-3 border border-[#27272a]">
+                      {visita.patientInfo.fullName}
+                    </td>
+                    <td className="p-3 border border-[#27272a]">
+                      {visita.visitType}
+                    </td>
+                    <td className="p-3 border border-[#27272a]">
+                      {!isLoadingVisitators && visita.visitatorId ? (
+                        <Link
+                        href={`/visitador/${visita.visitatorId}`}
+                        className="text-blue-500 underline"
+                      >
+                        {visitators[visita.visitatorId]} {/* Muestra el nombre como link */}
+                      </Link>
+                      ) : (
+                        <button
+                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                          onClick={() => handleClaimVisit(visita.id, user.uid)}
+                        >
+                          Reclamar
+                        </button>
+                      )}
+                    </td>
+                    {/* Columna de Acciones */}
+                    <td className="p-3 border border-[#27272a]">
+                      <button
+                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        onClick={() => handleEditVisit(visita.id)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 ml-2"
+                        onClick={() => handleDeleteVisit(visita.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="p-3 text-center text-gray-400">
+                    No hay visitaciones registradas
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
       )}

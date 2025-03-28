@@ -7,7 +7,10 @@ const protectedRoutes = ["/dashboard", "/profile", "/protected", "/visitador"];
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
 
-  if (protectedRoutes.includes(req.nextUrl.pathname)) {
+   // Verifica si la ruta solicitada es una subruta de las rutas protegidas
+   const isProtectedRoute = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
+
+  if (isProtectedRoute) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url)); // 🔥 Redirige si no hay token
     }

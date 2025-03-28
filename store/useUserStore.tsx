@@ -12,12 +12,14 @@ interface User {
 interface UserStore {
   user: User | null;
   fetchUser: () => Promise<void>;
+  isLoadingUser: boolean;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
-
+  isLoadingUser: false,
   fetchUser: async () => {
+    set({isLoadingUser: true});
     try {
       const res = await fetch("/api/auth/user", {
         method: "GET",
@@ -34,6 +36,9 @@ export const useUserStore = create<UserStore>((set) => ({
       }
     } catch (error) {
       console.error("Error de red:", error);
+      set({ user: null });
+    } finally {
+      set({ isLoadingUser: false });
     }
   },
 }));
