@@ -34,6 +34,8 @@ Pronto habra documentacion sobre cual es la idea general de cada pagina y compon
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 ## TODO
+- Poner la carga de usuario en el componente (pagina)
+
 - Hacer que funcionen las horas de manana y de tarde con un estado, para que no se renderice el titulo en caso de no haber
 - Anadir direccion de casa - Solo si la persona elige visita en casa
 - Arreglar funcionamiento de Navbar en ver-horas
