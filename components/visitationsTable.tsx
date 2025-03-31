@@ -53,6 +53,16 @@ export default function VisitationsTable() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    if (visitations) console.log('VISITATIONS',visitations);
+    else console.log('YIAASTEEEEEE');
+  }, [visitations]);
+
+  useEffect(() => {
+    if (user) console.log('USER',user);
+    else console.log('USEREERENOONNOOOOOOOOO');
+  }, [user]);
+
   // TODO: Hacer que el nombre del visitador sea un link a su perfil
   const handleClaimVisit = async (visitId: string, visitatorId: string) => {
     try {
