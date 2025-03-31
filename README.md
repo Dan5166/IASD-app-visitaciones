@@ -34,6 +34,7 @@ Pronto habra documentacion sobre cual es la idea general de cada pagina y compon
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 ## TODO
+- Hacer tabcomponent y breadcrumbs para perfil de visitador
 - Hacer componente general de perfil de usuario
 - Hacer panel de admin clon del panel de visitador, que se puedan hacer y ver mas cosas
 
