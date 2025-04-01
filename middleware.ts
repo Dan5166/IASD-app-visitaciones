@@ -12,6 +12,7 @@ export async function middleware(req: NextRequest) {
 
   if (isProtectedRoute) {
     if (!token) {
+      console.log("------------- Redirigiendo a LOGIN");
       return NextResponse.redirect(new URL("/login", req.url)); // 🔥 Redirige si no hay token
     }
 

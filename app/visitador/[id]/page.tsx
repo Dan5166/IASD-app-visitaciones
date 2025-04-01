@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { Timestamp } from "firebase/firestore";
 import { useParams } from "next/navigation";
+import Breadcrumbs from "@/components/breadCrumbs";
 
 interface User {
   createdAt: Timestamp | null;
@@ -18,6 +19,12 @@ export default function ProfileEditor() {
   const [isEditing, setIsEditing] = useState(false);
   const [searchedUserData, setSearchedUserData] = useState<User | null>();
   const { id } = useParams();
+
+  const breadcrumbPath = [
+    { label: "Inicio", href: "/" },
+    { label: "Visitador", href: "/visitador" },
+    { label: `Perfil de ${id}` }, // Último elemento sin enlace
+  ];
 
   const handleCopyUserId = () => {
     if (searchedUser?.uid) {
@@ -58,7 +65,8 @@ export default function ProfileEditor() {
   
 
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-100">
+    <div className="h-screen flex flex-col justify-center items-center bg-gray-100">
+      <Breadcrumbs path={breadcrumbPath}/>
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
         {/* Lado Izquierdo */}
         <div className="md:w-1/3 flex flex-col items-center border-r p-4">

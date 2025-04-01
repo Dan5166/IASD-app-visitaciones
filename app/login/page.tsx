@@ -22,7 +22,6 @@ export default function Login() {
       }
   
       const data = await res.json();
-      Cookies.set("token", data.token, { expires: 7, secure: true, sameSite: "strict" });
   
       router.push("/visitador"); // Redirección condicional dependiendo del rol mayor del usuario
     } catch (error) {

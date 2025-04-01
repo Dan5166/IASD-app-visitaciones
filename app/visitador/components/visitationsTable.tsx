@@ -1,43 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  Timestamp,
-} from "firebase/firestore";
-import { db, updateDocument } from "@/lib/firebase";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useVisitationStore } from "@/store/useVisitationsStore";
 import Link from "next/link";
 
-// Define la estructura de los datos para la semana disponible
-interface Visitation {
-  id: string;
-  requestedDate: Timestamp;
-  createdAt: Timestamp;
-  visitType: "En Domicilio" | "En Iglesia" | "Punto de encuentro" | "Online";
-  visitatorId: string | null;
-  patientInfo: {
-    fullName: string;
-    email: string;
-    phone: string;
-  };
-}
-
-interface VisitadorData {
-  [key: string]: string; // Las claves son strings (ID del usuario) y los valores son strings (nombre del visitador)
-}
-
 export default function VisitationsTable() {
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter(); // Hook para manejar la navegación
-
-  const { fetchUser, user, isLoadingUser } = useUserStore();
+  //const router = useRouter(); // Hook para manejar la navegación
+  const { fetchUser, user } = useUserStore();
   const {
     fetchVisitations,
     visitations,
@@ -66,7 +38,6 @@ export default function VisitationsTable() {
   // TODO: Hacer que el nombre del visitador sea un link a su perfil
   const handleClaimVisit = async (visitId: string, visitatorId: string) => {
     try {
-      setIsLoading(true);
       await claimVisit(visitId, visitatorId);
     } catch (error) {
       console.error(error);
@@ -77,7 +48,6 @@ export default function VisitationsTable() {
   const handleEditVisit = (visitId: string) => {
     // Lógica para editar visita (navegar a una página de edición o mostrar un formulario)
     console.log(`Editando visita ${visitId}`);
-    // Puedes agregar una navegación a una página de edición, por ejemplo:
     // router.push(`/edit-visit/${visitId}`);
   };
 
@@ -88,7 +58,7 @@ export default function VisitationsTable() {
   };
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
+    <div className="bg-[#09090b] p-6 border border-[#27272a]">
       <h2 className="text-3xl font-bold mb-4">Lista de Visitaciones</h2>
       {isLoadingVisitations ? (
         <div className="flex justify-center items-center h-40">
