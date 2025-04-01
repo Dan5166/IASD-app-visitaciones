@@ -70,7 +70,7 @@ export default function DateSelector() {
   }, [weekData]);
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
+    <div className="bg-[#f3f4f6] p-6 border border-[#27272a] rounded-md">
       <h2 className="text-3xl font-bold mb-2">Seleccione una fecha</h2>
       <p className="mb-6">
         Semana disponible: 24 de marzo - 30 de marzo de 2025
@@ -79,14 +79,14 @@ export default function DateSelector() {
       {isLoading ? (
         // Loader mientras carga
         <div className="flex justify-center items-center h-40">
-          <div className="w-10 h-10 border-4 border-white border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-black border-solid border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">
             <button
               onClick={goToPreviousMonth}
-              className="text-xl font-bold text-white hover:bg-[#27272a] p-2 rounded-md"
+              className="text-xl font-bold text-black hover:bg-[#313131] hover:text-white p-2 rounded-md"
             >
               {"<"}
             </button>
@@ -95,7 +95,7 @@ export default function DateSelector() {
             </h2>
             <button
               onClick={goToNextMonth}
-              className="text-xl font-bold text-white hover:bg-[#27272a] p-2 rounded-md"
+              className="text-xl font-bold text-black hover:bg-[#313131] hover:text-white p-2 rounded-md"
             >
               {">"}
             </button>
@@ -103,7 +103,7 @@ export default function DateSelector() {
 
           <div className="grid grid-cols-7 gap-2">
             {["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"].map((day) => (
-              <div key={day} className="text-center text-white p-2">
+              <div key={day} className="text-center text-black p-2">
                 {day}
               </div>
             ))}
@@ -115,10 +115,10 @@ export default function DateSelector() {
                 disabled={!isAvailable(day)}
                 className={`p-4 rounded-md text-center transition-all ${
                   selectedDate?.isSame(day, "day")
-                    ? "bg-[#18181a] text-white font-black"
+                    ? "bg-[#18181a] text-black font-black"
                     : isAvailable(day)
-                    ? "text-[#ededee] hover:bg-[#27272a] cursor-pointer"
-                    : "text-[#47474d] cursor-default"
+                    ? "text-black hover:bg-[#313131] hover:text-white cursor-pointer"
+                    : "text-[#c7c6c6] cursor-default"
                 }`}
               >
                 {day.format("D")}

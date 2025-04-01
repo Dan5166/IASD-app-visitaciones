@@ -44,8 +44,8 @@ export default function HourSelector() {
             onClick={() => handleTimeSelect(hourString)} // Pasa solo la hora como string
             className={`p-4 rounded-md text-center transition-all ${
               selectedTime === hourString
-                ? "bg-[#18181a] text-white"
-                : "bg-[#27272a] text-white hover:bg-[#47474d] cursor-pointer"
+                ? "bg-[#18181a] text-white font-bold"
+                : "bg-[#27272a] text-white hover:bg-[#47474d] cursor-pointer font-bold"
             }`}
           >
             {hourString}
@@ -83,7 +83,7 @@ export default function HourSelector() {
   }, [selectedDate?.format("YYYY-MM-DD")]);
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
+    <div className="bg-[#f3f4f6] p-6 border border-[#27272a] rounded-md">
       <h2 className="text-3xl font-bold mb-4">Seleccione una hora</h2>
       {selectedDate && (
         <p className="mb-6">
@@ -95,13 +95,13 @@ export default function HourSelector() {
       {isLoading ? (
         // Loader mientras carga
         <div className="flex justify-center items-center h-40">
-          <div className="w-10 h-10 border-4 border-white border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-black border-solid border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           {/* Mañana */}
           <div>
-            <h3 className="text-xl font-semibold text-white mb-2">Mañana</h3>
+            <h3 className="text-xl font-semibold text-black mb-2">Mañana</h3>
             <div className="grid grid-cols-3 gap-2">
               {hours && renderTimeGrid("00:00", "12:00")}{" "}
               {/* Horas de 00:00 a 11:00 */}
@@ -110,7 +110,7 @@ export default function HourSelector() {
 
           {/* Tarde */}
           <div>
-            <h3 className="text-xl font-semibold text-white mb-2">Tarde</h3>
+            <h3 className="text-xl font-semibold text-black mb-2">Tarde</h3>
             <div className="grid grid-cols-3 gap-2">
               {hours && renderTimeGrid("12:00", "23:00")}{" "}
               {/* Horas de 12:00 a 23:00 */}

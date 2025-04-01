@@ -9,9 +9,8 @@ import Confirmation from './components/confirmation'
 
 export default function VerHorasDisponibles() {
   const { selectedDate, selectedTime, activeTab } = useDateStore();
-
   return (
-    <div className='container'>
+    <div className='p-6'>
       {activeTab === "fecha" && !selectedDate ? (
         <DateSelector />  // Tab de selección de fecha
       ) : activeTab === "hora" && !selectedTime ? (

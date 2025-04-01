@@ -3,15 +3,13 @@
 import {
   Cog6ToothIcon,
   PowerIcon,
+  UserGroupIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import Dropdown from "./dropdown";
 import Logo from "./logo";
-import { useEffect, useState } from "react";
-import { getFromLocalStorage } from "@/actions/get-from-localstorage";
+import { useState } from "react";
 import Link from "next/link";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 const menuItems = [
@@ -28,11 +26,17 @@ const menuItems = [
     category: "Cuenta",
   },
   {
+    label: "Ver Visitadores",
+    icon: <UserGroupIcon className="h-6 w-6 text-red-500" />,
+    onClick: () => console.log("Cerrar Sesión"),
+    category: "Visitadores",
+  },
+  {
     label: "Cerrar Sesión",
     icon: <PowerIcon className="h-6 w-6 text-red-500" />,
     onClick: () => console.log("Cerrar Sesión"),
     category: "Sesión",
-  },
+  }
 ];
 
 const Navbar = () => {
@@ -40,7 +44,7 @@ const Navbar = () => {
   const router = useRouter(); // Hook para manejar la navegación
 
   return (
-    <div className="flex justify-between py-6 px-10 border-b border-solid border-gray-200 w-full">
+    <div className="fixed top-0 left-0 w-full flex justify-between py-4 px-10 border-b border-solid border-gray-200 bg-white shadow-md z-50">
       <Logo />
       <div>
         <Dropdown />

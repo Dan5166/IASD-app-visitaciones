@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { Timestamp } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import Breadcrumbs from "@/components/breadCrumbs";
+import Navbar from "@/components/navbar";
 
 interface User {
   createdAt: Timestamp | null;
@@ -65,6 +66,8 @@ export default function ProfileEditor() {
   
 
   return (
+    <>
+    <Navbar/>
     <div className="h-screen flex flex-col justify-center items-center bg-gray-100">
       <Breadcrumbs path={breadcrumbPath}/>
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
@@ -151,6 +154,7 @@ export default function ProfileEditor() {
         </div>
       </div>
     </div>
+    </>
   );
   
 }

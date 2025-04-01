@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useVisitationStore } from "@/store/useVisitationsStore";
 import Link from "next/link";
+import Breadcrumbs from "@/components/breadCrumbs";
 
 export default function VisitationsTable() {
   //const router = useRouter(); // Hook para manejar la navegación
@@ -18,6 +19,11 @@ export default function VisitationsTable() {
     isLoadingVisitations,
     isLoadingVisitators,
   } = useVisitationStore();
+  
+  const breadcrumbPath = [
+    { label: "Inicio", href: "/" },
+    { label: "Visitador" },
+  ];
 
   // Carga las visitaciones y los usuarios desde la API llamanda en Zustand
   useEffect(() => {
@@ -58,14 +64,15 @@ export default function VisitationsTable() {
   };
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a]">
+    <div className="bg-[#f3f4f6] p-6 border border-[#27272a]">
       <h2 className="text-3xl font-bold mb-4">Lista de Visitaciones</h2>
       {isLoadingVisitations ? (
         <div className="flex justify-center items-center h-40">
-          <div className="w-10 h-10 border-4 border-white border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-black border-solid border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">
+          <Breadcrumbs path={breadcrumbPath}/>
           <table className="min-w-full border-collapse border border-[#27272a]">
             <thead>
               <tr className="bg-[#18181a] text-white">
@@ -82,7 +89,7 @@ export default function VisitationsTable() {
                 visitations.map((visita) => (
                   <tr
                     key={visita.id}
-                    className="text-center hover:bg-[#27272a] text-white"
+                    className="text-center hover:bg-[#d2dff1] text-black"
                   >
                     <td className="p-3 border border-[#27272a]">
                       {dayjs
@@ -102,13 +109,13 @@ export default function VisitationsTable() {
                       {!isLoadingVisitators && visita.visitatorId ? (
                         <Link
                         href={`/visitador/${visita.visitatorId}`}
-                        className="text-blue-500 underline"
+                        className="text-blue-500 underline cursor-pointer"
                       >
                         {visitators[visita.visitatorId]} {/* Muestra el nombre como link */}
                       </Link>
                       ) : (
                         <button
-                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
                           onClick={() => handleClaimVisit(visita.id, user.uid)}
                         >
                           Reclamar
@@ -118,13 +125,13 @@ export default function VisitationsTable() {
                     {/* Columna de Acciones */}
                     <td className="p-3 border border-[#27272a]">
                       <button
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
                         onClick={() => handleEditVisit(visita.id)}
                       >
                         Editar
                       </button>
                       <button
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 ml-2"
+                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 ml-2 cursor-pointer"
                         onClick={() => handleDeleteVisit(visita.id)}
                       >
                         Eliminar

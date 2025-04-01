@@ -93,7 +93,7 @@ export default function Confirmation() {
   };
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md">
+    <div className="bg-[#f3f4f6] p-6 border border-[#27272a] rounded-md">
       <h2 className="text-3xl font-bold mb-2">Confirmación de Visita</h2>
 
       {/* Detalles de la cita */}
@@ -132,13 +132,13 @@ export default function Confirmation() {
       <div className="flex justify-between mt-6">
         <button
           onClick={handleCancel}
-          className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all"
+          className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all cursor-pointer"
         >
           Cancelar Reserva
         </button>
         <button
           onClick={handleConfirm}
-          className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all"
+          className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all cursor-pointer"
         >
           Confirmar Reserva
         </button>

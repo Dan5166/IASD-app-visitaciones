@@ -32,14 +32,14 @@ export default function InformationSelector() {
   };
 
   return (
-    <div className="bg-[#09090b] p-6 border border-[#27272a] rounded-md text-white">
+    <div className="bg-[#f3f4f6] p-6 border border-[#27272a] rounded-md text-black">
       <h2 className="text-3xl font-bold mb-4 text-center">
         Información del Visitado
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="fullName" className="block text-white">
+          <label htmlFor="fullName" className="block text-black">
             Nombre Completo
           </label>
           <input
@@ -47,14 +47,14 @@ export default function InformationSelector() {
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full p-3 rounded-md text-white bg-[#27272a] border border-gray-600"
+            className="w-full p-3 rounded-md text-black border border-gray-600"
             placeholder="Escribe tu nombre completo"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-white">
+          <label htmlFor="email" className="block text-black">
             Correo
           </label>
           <input
@@ -62,14 +62,14 @@ export default function InformationSelector() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-md text-white bg-[#27272a] border border-gray-600"
+            className="w-full p-3 rounded-md text-black border border-gray-600"
             placeholder="Escribe tu correo electrónico"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-white">
+          <label htmlFor="phone" className="block text-black">
             Teléfono
           </label>
           <input
@@ -77,14 +77,14 @@ export default function InformationSelector() {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full p-3 rounded-md text-white bg-[#27272a] border border-gray-600"
+            className="w-full p-3 rounded-md text-black border border-gray-600"
             placeholder="Escribe tu número de teléfono"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="age" className="block text-white">
+          <label htmlFor="age" className="block text-black">
             Edad
           </label>
           <input
@@ -92,7 +92,7 @@ export default function InformationSelector() {
             type="number"
             value={age}
             onChange={handleAgeChange}
-            className={`w-full p-3 rounded-md text-white bg-[#27272a] border ${
+            className={`w-full p-3 rounded-md text-black border ${
               ageError ? "border-red-500" : "border-gray-600"
             }`}
             placeholder="Escribe tu edad"
@@ -102,7 +102,7 @@ export default function InformationSelector() {
         </div>
 
         <div>
-          <label htmlFor="visitType" className="block text-white">
+          <label htmlFor="visitType" className="block text-black">
             Tipo de Visita
           </label>
           <select
@@ -117,7 +117,7 @@ export default function InformationSelector() {
                   | "Online"
               )
             }
-            className="w-full p-3 rounded-md text-white bg-[#27272a] border border-gray-600"
+            className="w-full p-3 rounded-md text-black border border-gray-600"
             required
           >
             <option value="En Domicilio">En Domicilio</option>
@@ -137,7 +137,7 @@ export default function InformationSelector() {
           </button>
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 transition ml-2"
+            className="p-3 bg-blue-500 rounded-md hover:bg-blue-600 text-white transition ml-2"
           >
             Confirmar Información
           </button>

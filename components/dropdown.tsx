@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { UserIcon, Cog6ToothIcon, PowerIcon } from "@heroicons/react/24/solid";
+import { UserIcon, Cog6ToothIcon, PowerIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import fileToBase64 from "@/actions/convert-file-to-base64";
 import {
@@ -186,11 +186,26 @@ export default function Dropdown() {
             <li className="text-gray-500 text-xs uppercase px-2 py-1">
               Cuenta
             </li>
-            <li className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-              <UserIcon className="w-5 h-5 text-gray-600" /> Perfil
-            </li>
+            {user.uid &&
+              <li className="px-2 py-2 hover:bg-gray-100 cursor-pointer">
+                <Link className="flex items-center gap-2"
+                  href={`/visitador/${user.uid}`}>
+                  <UserIcon className="w-5 h-5 text-gray-600" /> Perfil
+                </Link>
+              </li>
+            }
+            
             <li className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
               <Cog6ToothIcon className="w-5 h-5 text-gray-600" /> Configuración
+            </li>
+            <li className="text-gray-500 text-xs uppercase px-2 py-1 mt-2">
+              Admin
+            </li>
+            <li>
+              <Link className="px-2 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+              href='/visitador'>
+                <UserGroupIcon className="h-6 w-6 text-gray-600" /> Visitadores
+              </Link>
             </li>
             <li className="text-gray-500 text-xs uppercase px-2 py-1 mt-2">
               Sesión

@@ -13,6 +13,7 @@ export async function middleware(req: NextRequest) {
   if (isProtectedRoute) {
     if (!token) {
       console.log("------------- Redirigiendo a LOGIN");
+      console.log("No hay token");
       return NextResponse.redirect(new URL("/login", req.url)); // 🔥 Redirige si no hay token
     }
 
@@ -22,6 +23,7 @@ export async function middleware(req: NextRequest) {
       });
 
       if (!res.ok) {
+        console.log("Token no valido");
         return NextResponse.redirect(new URL("/login", req.url)); // 🔥 Redirige si el token no es válido
       }
     } catch (error) {
